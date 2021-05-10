@@ -11,8 +11,12 @@ public class PlayerMovement : MonoBehaviour
     public float screenBottom;
     public float screenLeft;
     public float screenRight;
+    public float bulletLifetime;
+    public GameObject bullet;
+    public float bulletForce;
     private float thrustInput;
     private float turnInput;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -24,6 +28,12 @@ public class PlayerMovement : MonoBehaviour
     {
         thrustInput = Input.GetAxis("Vertical");
         turnInput = Input.GetAxis("Horizontal");
+        if (Input.GetButtonDown("Fire1"))
+        {
+            GameObject newBullet = Instantiate(bullet, transform.position, transform.rotation);
+            newBullet.GetComponent<Rigidbody2D>().AddRelativeForce(Vector2.up * bulletForce);
+            Destroy(newBullet, bulletLifetime);
+        }
 
         //Screen Wraping
         Vector2 newPostition = transform.position;
