@@ -10,7 +10,10 @@ public class AstoroidScript : MonoBehaviour
     public float screenBottom;
     public float screenLeft;
     public float screenRight;
+    public int asteroidSize; //3 = large, 2 = medium, 1 = small
     public Rigidbody2D rb;
+    public GameObject asteroidMedium;
+    public GameObject asteroidSmall;
 
     // Start is called before the first frame update
     void Start()
@@ -20,6 +23,7 @@ public class AstoroidScript : MonoBehaviour
 
         rb.AddForce(thrust);
         rb.AddTorque(torque);
+
     }
 
     // Update is called once per frame
@@ -45,5 +49,31 @@ public class AstoroidScript : MonoBehaviour
         }
 
         transform.position = newPostition;
+    }
+
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("bullet"))
+        {
+            Destroy(other.gameObject);
+            Debug.Log(asteroidSize);
+            if (asteroidSize == 3)
+            {
+                Instantiate(asteroidMedium, transform.position, transform.rotation);
+                Instantiate(asteroidMedium, transform.position, transform.rotation);
+                Destroy(this.gameObject);
+
+            }
+            else if (asteroidSize == 2)
+            {
+                Instantiate(asteroidSmall, transform.position, transform.rotation);
+                Instantiate(asteroidSmall, transform.position, transform.rotation);
+                Destroy(this.gameObject);
+            }
+            else if (asteroidSize == 1)
+            {
+                Destroy(this.gameObject);
+            }
+        }
     }
 }

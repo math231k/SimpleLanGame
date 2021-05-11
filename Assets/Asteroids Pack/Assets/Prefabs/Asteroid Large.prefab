@@ -106,8 +106,8 @@ Rigidbody2D:
   m_BodyType: 0
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
+  m_UseAutoMass: 1
+  m_Mass: 6.069871
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 0
@@ -131,7 +131,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 1.8
+  m_Radius: 1.39
 --- !u!114 &114274912825096350
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -144,13 +144,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 707554b732c86f246a10f242345f2159, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxThrust: 100
-  maxTorque: 100
+  maxThrust: 1000
+  maxTorque: 1000
   screenTop: 9.5
   screenBottom: -9.5
   screenLeft: -15
   screenRight: 12
+  asteroidSize: 3
   rb: {fileID: 50973207161127126}
+  asteroidMedium: {fileID: 151664, guid: fa49e460baf435b4780da7196c2ab473, type: 3}
+  asteroidSmall: {fileID: 141316, guid: 84cc3cd234dfc9d4d9d2e92c0eb0af75, type: 3}
 --- !u!1 &153142
 GameObject:
   m_ObjectHideFlags: 0

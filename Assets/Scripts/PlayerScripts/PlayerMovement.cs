@@ -14,8 +14,10 @@ public class PlayerMovement : MonoBehaviour
     public float bulletLifetime;
     public GameObject bullet;
     public float bulletForce;
+    public float deathForce;
     private float thrustInput;
     private float turnInput;
+
 
     // Start is called before the first frame update
     void Start()
@@ -34,7 +36,7 @@ public class PlayerMovement : MonoBehaviour
             newBullet.GetComponent<Rigidbody2D>().AddRelativeForce(Vector2.up * bulletForce);
             Destroy(newBullet, bulletLifetime);
         }
-
+        transform.Rotate(Vector3.forward * turnInput * Time.deltaTime * -turnThrust);
         //Screen Wraping
         Vector2 newPostition = transform.position;
         if(transform.position.y > screenTop)
@@ -60,6 +62,14 @@ public class PlayerMovement : MonoBehaviour
     void FixedUpdate()
     {
         rb.AddRelativeForce(Vector2.up * thrustInput);
-        rb.AddTorque(-turnInput);
+        //rb.AddTorque(-turnInput);
+    }
+
+    void OnCollisionEnter2D(Collision2D col)
+    {
+        if (col.relativeVelocity.magnitude > deathForce)
+        {
+            Destroy(this.gameObject);
+        }
     }
 }
