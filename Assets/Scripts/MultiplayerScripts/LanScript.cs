@@ -1,18 +1,23 @@
-﻿using System.Collections;
+﻿using Mirror;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LanScript : MonoBehaviour
+public class LanScript : NetworkManager
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    
+    
+    public Transform player1;
+    public Transform player2;
+    GameObject ateroid1;
 
-    // Update is called once per frame
-    void Update()
+    public override void OnServerAddPlayer(NetworkConnection conn)
     {
-        
+        // add player at correct spawn position
+        Transform start = numPlayers == 0 ? player1 : player2;
+        GameObject player = Instantiate(playerPrefab, start.position, start.rotation);
+        NetworkServer.AddPlayerForConnection(conn, player);
     }
 }
+
+

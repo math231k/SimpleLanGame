@@ -1,8 +1,9 @@
-﻿using System.Collections;
+﻿using Mirror;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerMovement : MonoBehaviour
+public class PlayerMovement : NetworkBehaviour
 {
     public Rigidbody2D rb;
     public float thrust;
@@ -30,13 +31,19 @@ public class PlayerMovement : MonoBehaviour
     {
         thrustInput = Input.GetAxis("Vertical");
         turnInput = Input.GetAxis("Horizontal");
-        if (Input.GetButtonDown("Fire1"))
+        if (isLocalPlayer)
+        {
+            if (Input.GetButtonDown("Fire1"))
         {
             GameObject newBullet = Instantiate(bullet, transform.position, transform.rotation);
             newBullet.GetComponent<Rigidbody2D>().AddRelativeForce(Vector2.up * bulletForce);
             Destroy(newBullet, bulletLifetime);
         }
-        transform.Rotate(Vector3.forward * turnInput * Time.deltaTime * -turnThrust);
+        
+            transform.Rotate(Vector3.forward * turnInput * Time.deltaTime * -turnThrust);
+        }
+        
+        
         //Screen Wraping
         Vector2 newPostition = transform.position;
         if(transform.position.y > screenTop)
@@ -61,8 +68,11 @@ public class PlayerMovement : MonoBehaviour
 
     void FixedUpdate()
     {
-        rb.AddRelativeForce(Vector2.up * thrustInput);
-        //rb.AddTorque(-turnInput);
+        if (isLocalPlayer)
+        {
+            rb.AddRelativeForce(Vector2.up * thrustInput);
+        }
+        
     }
 
     void OnCollisionEnter2D(Collision2D col)
