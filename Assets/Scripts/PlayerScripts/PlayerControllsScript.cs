@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerMovement : NetworkBehaviour
+public class PlayerControllsScript : NetworkBehaviour
 {
     public Rigidbody2D rb;
     public float thrust;
@@ -14,6 +14,7 @@ public class PlayerMovement : NetworkBehaviour
     public float screenRight;
     public float bulletLifetime;
     public GameObject bullet;
+    public GameObject asteroid;
     public float bulletForce;
     public float deathForce;
     private float thrustInput;
@@ -35,9 +36,7 @@ public class PlayerMovement : NetworkBehaviour
         {
             if (Input.GetButtonDown("Fire1"))
         {
-            GameObject newBullet = Instantiate(bullet, transform.position, transform.rotation);
-            newBullet.GetComponent<Rigidbody2D>().AddRelativeForce(Vector2.up * bulletForce);
-            Destroy(newBullet, bulletLifetime);
+                fire();
         }
         
             transform.Rotate(Vector3.forward * turnInput * Time.deltaTime * -turnThrust);
@@ -74,12 +73,20 @@ public class PlayerMovement : NetworkBehaviour
         }
         
     }
-
+    [ServerCallback]
     void OnCollisionEnter2D(Collision2D col)
     {
-        if (col.relativeVelocity.magnitude > deathForce)
+        if (col.relativeVelocity.magnitude > deathForce && col.gameObject.CompareTag("Enemy"))
         {
             Destroy(this.gameObject);
         }
+    }
+    [Command]
+    void fire()
+    {
+        GameObject newBullet = Instantiate(bullet, transform.position, transform.rotation);
+        newBullet.GetComponent<Rigidbody2D>().AddRelativeForce(Vector2.up * bulletForce);
+        NetworkServer.Spawn(newBullet);
+        Destroy(newBullet, bulletLifetime);
     }
 }

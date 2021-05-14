@@ -1,8 +1,9 @@
-﻿using System.Collections;
+﻿using Mirror;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AstoroidScript : MonoBehaviour
+public class AstoroidScript : NetworkBehaviour
 {
     public float maxThrust;
     public float maxTorque;
@@ -50,30 +51,46 @@ public class AstoroidScript : MonoBehaviour
 
         transform.position = newPostition;
     }
-
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("bullet"))
         {
-            Destroy(other.gameObject);
-            Debug.Log(asteroidSize);
             if (asteroidSize == 3)
             {
-                Instantiate(asteroidMedium, transform.position, transform.rotation);
-                Instantiate(asteroidMedium, transform.position, transform.rotation);
-                Destroy(this.gameObject);
-
+                SpawnMediumAsteroid();
+                Destroy(other.gameObject);
             }
             else if (asteroidSize == 2)
             {
-                Instantiate(asteroidSmall, transform.position, transform.rotation);
-                Instantiate(asteroidSmall, transform.position, transform.rotation);
-                Destroy(this.gameObject);
+                SpawnSmallAsteroid();
+                Destroy(other.gameObject);
             }
             else if (asteroidSize == 1)
             {
-                Destroy(this.gameObject);
+                Kill();
+                Destroy(other.gameObject);
             }
         }
+    }
+    void SpawnMediumAsteroid()
+    {
+        GameObject asteroid1 = Instantiate(asteroidMedium, transform.position, transform.rotation);
+        GameObject asteroid2 = Instantiate(asteroidMedium, transform.position, transform.rotation);
+        NetworkServer.Spawn(asteroid1, connectionToClient);
+        NetworkServer.Spawn(asteroid2, connectionToClient);
+        NetworkServer.Destroy(gameObject);
+    }
+    void SpawnSmallAsteroid()
+    {
+        GameObject asteroid1 = Instantiate(asteroidSmall, transform.position, transform.rotation);
+        GameObject asteroid2 = Instantiate(asteroidSmall, transform.position, transform.rotation);
+        NetworkServer.Spawn(asteroid1, connectionToClient);
+        NetworkServer.Spawn(asteroid2, connectionToClient);
+        NetworkServer.Destroy(gameObject);
+        
+    }
+    void Kill()
+    {
+        NetworkServer.Destroy(gameObject);
     }
 }
